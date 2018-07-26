@@ -1,7 +1,9 @@
 import speech_recognition as sr # pip install speech_recognition , pip install pyAudio
-import win32com.client # pip install win32
 from googletrans import Translator # pip install googletrans
+from voiceOver import VoiceOver
+
 translator = Translator()
+
 # Record Audio
 
 r = sr.Recognizer()
@@ -12,13 +14,15 @@ with audioFile as source:
     audio = r.record(source)
 
 print("connecting voice...")
-speaker = win32com.client.Dispatch("SAPI.SpVoice")
+
+speaker = VoiceOver()
+
 
 try:
     myWords = r.recognize_google(audio, language="ru-RU").lower() # getting audio text in russian
     engWords = translator.translate(myWords, src='ru', dest='en').text # translation ru to en
-    speaker.Speak(engWords)
-
+    speaker.speak(engWords)
+ 
     print(engWords)
 except sr.UnknownValueError:
     print("Google Speech Recognition could not understand audio")
